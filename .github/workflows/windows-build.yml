@@ -60,6 +60,21 @@ jobs:
           bash ./util/build-win32.sh
           ./nginx.exe -V 2>&1
 
+      - name: Prepare artifacts
+        if: always()
+        run: |
+          VERSION=$(./util/ver)
+          mkdir -p artifacts
+          cp -r "openresty-${VERSION}/objs" "artifacts/" || true
+          cp "openresty-${VERSION}/nginx.exe" "artifacts/" || true
+          cp "openresty-${VERSION}/"*.exe "artifacts/" 2>/dev/null || true
+          ls -la artifacts/
 
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v7.0.1
+      - name: Upload Build Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: openresty-windows-${{ matrix.host_arch }}
+          path: artifacts/
+          retention-days: 90
+          if-no-files-found: warn
