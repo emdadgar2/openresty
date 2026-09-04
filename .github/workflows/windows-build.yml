@@ -23,10 +23,6 @@ jobs:
             runner: windows-2022
             msystem: MINGW64
             toolchain: mingw-w64-x86_64-toolchain
-          - host_arch: arm64
-            runner: windows-11-arm
-            msystem: MINGW64
-            toolchain: mingw-w64-x86_64-toolchain
 
     defaults:
       run:
@@ -63,3 +59,7 @@ jobs:
           cd "openresty-$(./util/ver)"
           bash ./util/build-win32.sh
           ./nginx.exe -V 2>&1
+
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v7.0.1
